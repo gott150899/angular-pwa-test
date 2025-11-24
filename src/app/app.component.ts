@@ -19,5 +19,11 @@ export class AppComponent {
       .subscribe((evt) => {
         alert('Có phiên bản mới. Vui lòng reload để làm mới')
       });
+
+      this.testFn();
+  }
+
+  testFn(){
+
   }
 }
