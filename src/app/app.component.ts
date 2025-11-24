@@ -21,6 +21,7 @@ export class AppComponent {
       });
 
       this.testFn();
+      
   }
 
   testFn(){
