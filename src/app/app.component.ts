@@ -25,7 +25,9 @@ export class AppComponent {
       filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
     )
     .subscribe((evt) => {
-      alert('Có phiên bản mới. Vui lòng reload để làm mới')
+      if(confirm('Có phiên bản mới. Vui lòng reload để làm mới')){
+        window.location.reload();
+      }
     });
 
     const appIsStable$ = appRef.isStable.pipe(first((isStable) => isStable === true));
@@ -34,7 +36,7 @@ export class AppComponent {
     everySixHoursOnceAppIsStable$.subscribe(async () => {
       try {
         const updateFound = await swUpdate.checkForUpdate();
-        // console.log(updateFound ? 'A new version is available.' : 'Already on the latest version.');
+        console.log(updateFound ? 'A new version is available.' : 'Already on the latest version.');
       } catch (err) {
         console.error('Failed to check for updates:', err);
       }
@@ -49,6 +51,7 @@ export class AppComponent {
     
     
     
+
 
 
 
