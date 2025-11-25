@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { filter } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,12 @@ export class AppComponent {
   constructor(){
     const swUpdate = inject(SwUpdate);
     swUpdate.versionUpdates
-      .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
+      .pipe(
+        tap(evt => {
+          console.log('tap event', evt)
+        }),
+        filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
+      )
       .subscribe((evt) => {
         alert('Có phiên bản mới. Vui lòng reload để làm mới')
       });
