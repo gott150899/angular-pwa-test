@@ -28,17 +28,17 @@ export class AppComponent {
       alert('Có phiên bản mới. Vui lòng reload để làm mới')
     });
 
-    const appIsStable$ = appRef.isStable.pipe(first((isStable) => isStable === true));
-    const everySixHours$ = interval(15 * 1000);
-    const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
-    everySixHoursOnceAppIsStable$.subscribe(async () => {
-      try {
-        const updateFound = await swUpdate.checkForUpdate();
-        console.log(updateFound ? 'A new version is available.' : 'Already on the latest version.');
-      } catch (err) {
-        console.error('Failed to check for updates:', err);
-      }
-    });
+    // const appIsStable$ = appRef.isStable.pipe(first((isStable) => isStable === true));
+    // const everySixHours$ = interval(15 * 1000);
+    // const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
+    // everySixHoursOnceAppIsStable$.subscribe(async () => {
+    //   try {
+    //     const updateFound = await swUpdate.checkForUpdate();
+    //     console.log(updateFound ? 'A new version is available.' : 'Already on the latest version.');
+    //   } catch (err) {
+    //     console.error('Failed to check for updates:', err);
+    //   }
+    // });
 
     this.testFn();
 
@@ -49,6 +49,7 @@ export class AppComponent {
     
     
     
+
 
     
   }
