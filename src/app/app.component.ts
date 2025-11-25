@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ApplicationRef, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { filter, tap } from 'rxjs';
+import { concat, filter, first, interval, tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,26 +11,42 @@ import { filter, tap } from 'rxjs';
 })
 export class AppComponent {
   title = 'angular-pwa-test';
+  
 
   constructor(){
     const swUpdate = inject(SwUpdate);
-    swUpdate.versionUpdates
-      .pipe(
-        tap(evt => {
-          console.log('tap event', evt)
-        }),
-        filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
-      )
-      .subscribe((evt) => {
-        alert('Có phiên bản mới. Vui lòng reload để làm mới')
-      });
+    const appRef = inject(ApplicationRef);
 
-      this.testFn();
+    swUpdate.versionUpdates
+    .pipe(
+      tap(evt => {
+        console.log('tap event', evt)
+      }),
+      filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
+    )
+    .subscribe((evt) => {
+      alert('Có phiên bản mới. Vui lòng reload để làm mới')
+    });
+
+    const appIsStable$ = appRef.isStable.pipe(first((isStable) => isStable === true));
+    const everySixHours$ = interval(15 * 1000);
+    const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
+    everySixHoursOnceAppIsStable$.subscribe(async () => {
+      try {
+        const updateFound = await swUpdate.checkForUpdate();
+        console.log(updateFound ? 'A new version is available.' : 'Already on the latest version.');
+      } catch (err) {
+        console.error('Failed to check for updates:', err);
+      }
+    });
+
+    this.testFn();
 
   }
 
   testFn(){
 
+    
     
     
     
